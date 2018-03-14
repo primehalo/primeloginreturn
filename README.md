@@ -2,7 +2,7 @@
 
 ## Synopsis
 
-Attempts to returns user to the page they were at just prior to logging in and logging out.
+Attempts to return users to the page they were at just prior to logging in and logging out.
 
 ## Installation
 

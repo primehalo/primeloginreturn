@@ -14,6 +14,7 @@ class listener implements EventSubscriberInterface
 	/**
 	* Service Containers
 	*/
+	protected $request;
 	protected $template;
 	protected $user;
 	protected $board_url;
@@ -23,17 +24,20 @@ class listener implements EventSubscriberInterface
 	/**
 	* Constructor
 	*
+	* @param \phpbb\request\request 	$request		Request object
 	* @param \phpbb\template\template 	$template	Template object
 	* @param \phpbb\user				$user		User object
 	* @param $root_path					$root_path	phpBB root path
 	* @param $phpExt					$phpExt		php file extension
 	*/
 	public function __construct(
+		\phpbb\request\request $request,
 		\phpbb\template\template $template,
 		\phpbb\user $user,
 		$root_path,
 		$phpExt)
 	{
+		$this->request		= $request;
 		$this->template		= $template;
 		$this->user			= $user;
 		$this->root_path	= $root_path;
@@ -96,8 +100,8 @@ class listener implements EventSubscriberInterface
 	*/
 	public function redirect($event)
 	{
-		$mode		= request_var('mode', '');
-		$redirect	= request_var('redirect', '');
+		$mode		= $this->request->variable('mode', '');
+		$redirect	= $this->request->variable('redirect', '');
 		$redirect	= str_replace('&amp;', '&', $redirect);
 		if ($mode === 'logout' && $redirect)
 		{

@@ -2,8 +2,9 @@ services:
     primehalo.primeloginreturn.listener:
         class: primehalo\primeloginreturn\event\listener
         arguments:
-            - @template
-            - @user
+            - '@request'
+            - '@template'
+            - '@user'
             - '%core.root_path%'
             - '%core.php_ext%'
         tags:
