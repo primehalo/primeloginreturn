@@ -3,8 +3,8 @@
 	"type": "phpbb-extension",
 	"description": "Attempts to return users to the page they were at just prior to logging in and logging out.",
 	"homepage": "https://github.com/primehalo/primeloginreturn",
-	"version": "1.0.1",
-	"time": "2018-03-13",
+	"version": "1.0.2",
+	"time": "2018-05-31",
 	"license": "GPL-2.0",
 	"authors": [
 		{

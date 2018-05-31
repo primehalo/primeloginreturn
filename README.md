@@ -9,7 +9,7 @@ Attempts to return users to the page they were at just prior to logging in and l
 1. Download the ZIP file.
 2. Unzip and copy to the `ext` directory of your phpBB board so that you have `ext/primehalo/primeloginreturn.
 3. Navigate in the ACP to `Customise -> Manage extensions`.
-4. Look for `Prime Login Return under the Disabled Extensions list, and click its `Enable` link.
+4. Look for `Prime Login Return` under the Disabled Extensions list, and click its `Enable` link.
 
 ## License
 

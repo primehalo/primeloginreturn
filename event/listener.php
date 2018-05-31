@@ -14,37 +14,44 @@ class listener implements EventSubscriberInterface
 	/**
 	* Service Containers
 	*/
+	protected $config;
+	protected $path_helper;
 	protected $request;
 	protected $template;
 	protected $user;
-	protected $board_url;
 	protected $root_path;
 	protected $php_ext;
+	#protected $board_url;
 
 	/**
 	* Constructor
 	*
+	* @param \phpbb\config\config		$config			Config object
+	* @param \phpbb\path_helper			$path_helper	Path helper
 	* @param \phpbb\request\request 	$request		Request object
-	* @param \phpbb\template\template 	$template	Template object
-	* @param \phpbb\user				$user		User object
-	* @param $root_path					$root_path	phpBB root path
-	* @param $phpExt					$phpExt		php file extension
+	* @param \phpbb\template\template 	$template		Template object
+	* @param \phpbb\user				$user			User object
+	* @param $root_path					$root_path		phpBB root path
+	* @param $phpExt					$phpExt			php file extension
 	*/
 	public function __construct(
+		\phpbb\config\config $config,
+		\phpbb\path_helper $path_helper,
 		\phpbb\request\request $request,
 		\phpbb\template\template $template,
 		\phpbb\user $user,
 		$root_path,
 		$phpExt)
 	{
+		$this->config		= $config;
+		$this->path_helper	= $path_helper;
 		$this->request		= $request;
 		$this->template		= $template;
 		$this->user			= $user;
 		$this->root_path	= $root_path;
 		$this->php_ext		= $phpExt;
-
-		$this->board_url = generate_board_url(true);
-		$this->board_url = utf8_case_fold_nfc($this->board_url);
+		#$this->board_url = generate_board_url(true);
+		#$this->board_url = utf8_case_fold_nfc($this->board_url);
 	}
 
 	/**
@@ -70,7 +77,7 @@ class listener implements EventSubscriberInterface
 		$is_logged_in = $this->user->data['user_id'] != ANONYMOUS;
 
 		if ($this->user->page['page_name'] == "ucp.{$this->php_ext}"
-			|| $this->user->page['page_dir']
+			#|| $this->user->page['page_dir']
 			|| ($is_logged_in && !self::ENABLE_LOGOUT)
 			|| (!$is_logged_in && !self::ENABLE_LOGIN))
 		{
@@ -84,11 +91,37 @@ class listener implements EventSubscriberInterface
 		{
 			$u_login_logout = append_sid("{$this->root_path}ucp.{$this->php_ext}", 'mode=login');
 		}
-		$redirect = 'redirect=' . urlencode(str_replace('&amp;', '&', build_url(array('_f_'))));
+		$redirect = 'redirect=' . urlencode(str_replace('&amp;', '&', $this->build_url()));
 		$seperator = strpos($u_login_logout, '?') === false ? '?' : '&amp;';
 		$u_login_logout .= $seperator . $redirect;
 		$this->template->assign_var('U_LOGIN_LOGOUT', $u_login_logout);
 	}
+
+	/**
+	* Returns url from the session/current page with an re-appended SID with optionally stripping vars from the url
+	* Same as the build_url() function in includes/functions.php except the url is built relative to phpBB's root
+	* instead of relative to the current directory since the login/logout page is located in phpBB's root path.
+	*/
+	public function build_url($strip_vars = false)
+	{
+		$user_page = ($this->user->page['page_dir'] ? $this->user->page['page_dir'] . '/' : '') . $this->user->page['page'];
+		$page = $this->path_helper->get_valid_page($user_page, $this->config['enable_mod_rewrite']);
+
+		// Append SID
+		$redirect = append_sid($page, false, false, false, true);
+
+		if ($strip_vars !== false)
+		{
+			$redirect = $this->path_helper->strip_url_params($redirect, $strip_vars, false);
+		}
+		else
+		{
+			$redirect = str_replace('&', '&amp;', $redirect);
+		}
+
+		return $redirect . ((strpos($redirect, '?') === false) ? '?' : '');
+	}
+
 
 	/**
 	* On a redirect check to see if this is a logout. Login automatically

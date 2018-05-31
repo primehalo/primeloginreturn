@@ -2,6 +2,8 @@ services:
     primehalo.primeloginreturn.listener:
         class: primehalo\primeloginreturn\event\listener
         arguments:
+            - '@config'
+            - '@path_helper'
             - '@request'
             - '@template'
             - '@user'
