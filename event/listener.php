@@ -21,7 +21,6 @@ class listener implements EventSubscriberInterface
 	protected $user;
 	protected $root_path;
 	protected $php_ext;
-	#protected $board_url;
 
 	/**
 	* Constructor
@@ -50,8 +49,6 @@ class listener implements EventSubscriberInterface
 		$this->user			= $user;
 		$this->root_path	= $root_path;
 		$this->php_ext		= $phpExt;
-		#$this->board_url = generate_board_url(true);
-		#$this->board_url = utf8_case_fold_nfc($this->board_url);
 	}
 
 	/**
@@ -68,16 +65,14 @@ class listener implements EventSubscriberInterface
 	/**
 	* Update the login/logout link to include a query string redirect variable.
 	*
-	* @param object $event The event object
 	* @return null
 	* @access public
 	*/
-	public function page_header_after($event)
+	public function page_header_after()
 	{
 		$is_logged_in = $this->user->data['user_id'] != ANONYMOUS;
 
 		if ($this->user->page['page_name'] == "ucp.{$this->php_ext}"
-			#|| $this->user->page['page_dir']
 			|| ($is_logged_in && !self::ENABLE_LOGOUT)
 			|| (!$is_logged_in && !self::ENABLE_LOGIN))
 		{
