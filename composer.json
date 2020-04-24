@@ -5,7 +5,7 @@
 	"homepage": "https://github.com/primehalo/primeloginreturn",
 	"version": "1.0.2",
 	"time": "2018-05-31",
-	"license": "GPL-2.0",
+	"license": "GPL-2.0-only",
 	"authors": [
 		{
 			"name": "Ken F. Innes IV",
